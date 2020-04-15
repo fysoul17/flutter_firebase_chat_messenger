@@ -1,5 +1,5 @@
 name: flutter_firebase_chat_messenger
-description: The package provides chat messenger features like Telegram or KakaoTalk.
+description: An example project of the package which provides chat messenger features like Telegram or KakaoTalk.
 
 version: 1.0.0+1
 
