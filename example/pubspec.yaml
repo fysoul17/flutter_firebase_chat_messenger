@@ -4,13 +4,17 @@ description: An example project of the package which provides chat messenger fea
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
+  cached_network_image: ^2.0.0
+  firebase_analytics: ^5.0.11
+  intl: ^0.16.1
+  bubble: ^1.1.9+1
 
   firebase_chat_messenger:
     path: ../
