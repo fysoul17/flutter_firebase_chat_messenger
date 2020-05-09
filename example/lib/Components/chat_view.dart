@@ -44,7 +44,7 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     print("[[[[ Build ]]]] Chat View");
 
-    TextStyle defaultTextStyle = Theme.of(context).textTheme.body1;
+    TextStyle defaultTextStyle = Theme.of(context).textTheme.bodyText2;
 
     const BubbleStyle styleSomebody = BubbleStyle(
       nip: BubbleNip.leftTop,

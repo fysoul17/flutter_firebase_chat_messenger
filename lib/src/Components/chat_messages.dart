@@ -12,8 +12,8 @@ class ChatMessages extends StatelessWidget {
   const ChatMessages({
     Key key,
     @required this.groupId,
+    @required this.builder,
     this.child,
-    this.builder,
   })  : assert(groupId != null),
         super(key: key);
 
@@ -36,6 +36,8 @@ class ChatMessages extends StatelessWidget {
         ),
       );
     } else {
+      ChatEngine.instance.markMessagesAsRead(groupId);
+
       return ChangeNotifierProvider.value(
         value: messageProvider,
         child: ChatMessageConsumer(
@@ -62,26 +64,22 @@ class ChatGroupMessageConsumer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("[[[[ Build ]]]] Package >> ChatGroupMessageConsumer");
+    List<ChatGroup> chatGroups = context.select<ChatGroupProvider, List<ChatGroup>>((provider) => provider.chatGroups);
 
-    return Selector<ChatGroupProvider, List<ChatGroup>>(
-      selector: (_, provider) => provider.chatGroups,
-      builder: (_, chatGroups, __) {
-        print("[[[[ Selector ]]]] Package >> ChatGroupMessageConsumer");
+    print("[[[[ Selector ]]]] Package >> ChatGroupMessageConsumer");
 
-        if (chatGroups != null) {
-          if (chatGroups.firstWhere((g) => g.id == groupId, orElse: () => null) == null) {
-            return builder(context, List<ChatMessage>(), child);
-          } else {
-            return ChangeNotifierProvider.value(
-              value: ChatEngine.instance.getChatMessageProviderOf(groupId),
-              child: ChatMessageConsumer(builder: builder, child: child),
-            );
-          }
-        } else {
-          return builder(context, List<ChatMessage>(), child);
-        }
-      },
-    );
+    if (chatGroups != null) {
+      if (chatGroups.firstWhere((g) => g.id == groupId, orElse: () => null) == null) {
+        return builder(context, List<ChatMessage>(), child);
+      } else {
+        return ChangeNotifierProvider.value(
+          value: ChatEngine.instance.getChatMessageProviderOf(groupId),
+          child: ChatMessageConsumer(builder: builder, child: child),
+        );
+      }
+    } else {
+      return builder(context, List<ChatMessage>(), child);
+    }
   }
 }
 
@@ -98,12 +96,10 @@ class ChatMessageConsumer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("[[[[ Build ]]]] Package >> ChatMessageConsumer");
-    return Selector<ChatMessageProvider, List<ChatMessage>>(
-      selector: (_, provider) => provider.messages,
-      builder: (_, messages, __) {
-        print("[[[[ Selector ]]]] Package >> ChatMessageConsumer");
-        return builder(context, messages, child);
-      },
-    );
+
+    List<ChatMessage> messages = context.select<ChatMessageProvider, List<ChatMessage>>((provider) => provider.messages);
+
+    print("[[[[ Selector ]]]] Package >> ChatMessageConsumer");
+    return builder(context, messages, child);
   }
 }

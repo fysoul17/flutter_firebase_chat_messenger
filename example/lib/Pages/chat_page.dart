@@ -44,7 +44,7 @@ class _ChatPageState extends State<ChatPage> {
     UserProvider userProvider = UserProvider.of(context, listen: false);
     ChatUser opponentUserData = widget.chatGroupData.getOpponentData(userProvider.userData.uid);
     bool photoExist = opponentUserData.avatarUrl.length > 0;
-    TextStyle defaultTextStyle = Theme.of(context).textTheme.body1;
+    TextStyle defaultTextStyle = Theme.of(context).textTheme.bodyText2;
     //Color primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(

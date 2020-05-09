@@ -141,7 +141,7 @@ class ChatEngine {
       print("----------- Updating chats from server -----------");
       List<Future> updates = List<Future>();
 
-      chatsFromServer.forEach((c) => updates.add(updateServerMessageToLocalDB(provider, c)));
+      chatsFromServer.reversed.forEach((c) => updates.add(updateServerMessageToLocalDB(provider, c)));
 
       await Future.wait(updates);
 
@@ -187,9 +187,7 @@ class ChatEngine {
 
         await SQLiteService.instance.deleteMessage(provider.groupId, messageFromServer.uid);
       } else {
-        if (recentLocalMessage != null &&
-            recentLocalMessage.uid == messageFromServer.uid &&
-            recentLocalMessage.readParticipants.length == messageFromServer.readParticipants.length) {
+        if (recentLocalMessage != null && recentLocalMessage.uid == messageFromServer.uid && recentLocalMessage.readParticipants.length == messageFromServer.readParticipants.length) {
           print("------- Not gonna process below docs ----------");
           break;
         }
@@ -262,7 +260,7 @@ class ChatEngine {
         print(chat.toString());
         chat.readParticipants.add(user.uid);
         chat.unreadParticipants.remove(user.uid);
-        batchJob.updateData(groupRef.document(groupId).collection('chatMessages').document(chat.uid), {"readParticipants": chat.readParticipants});
+        batchJob.updateData(groupRef.document(groupId).collection('chatMessages').document(chat.uid), {"readParticipants": chat.readParticipants, "unreadParticipants": chat.unreadParticipants});
       });
       batchJob.commit();
     } catch (e) {
@@ -279,11 +277,26 @@ class ChatEngine {
     }
   }
 
-  void clearCache() async {
-    await SQLiteService.instance.clearDB();
+  int getAllNumberOfUnreadMessages(String userId) {
+    List<ChatMessageProvider> providers = _chatMessageProviders;
+    if (providers.length < 1) {
+      return 0;
+    } else {
+      int counter = 0;
+      providers.forEach((p) {
+        counter += p.numberOfUnreadMessages(userId);
+      });
+      return counter;
+    }
   }
 
-  void removeDB() async {
+  Future<void> clearCache() async {
+    await SQLiteService.instance.clearDB();
+    _chatMessageProviders.clear();
+    _chatGroupProvider.chatGroups.clear();
+  }
+
+  Future<void> removeDB() async {
     await SQLiteService.instance.removeDB();
   }
 }
