@@ -270,7 +270,7 @@ class ChatEngine {
         chat.readParticipants.add(user.uid);
         chat.unreadParticipants.remove(user.uid);
 
-        // Above codes will change data of existing message. So notify listener must be called manually.
+        // Above codes will change data of existing message. So notifyListeners() must be called manually.
         provider.updateChatMessage(ChatMessage.fromMap(chat.toMap()));
 
         batchJob.updateData(groupRef.document(groupId).collection('chatMessages').document(chat.uid), {"readParticipants": chat.readParticipants, "unreadParticipants": chat.unreadParticipants});
