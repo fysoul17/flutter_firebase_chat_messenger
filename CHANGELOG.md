@@ -1,6 +1,6 @@
 ## [0.0.4] - 11/May/2020
 
-- Fixed bug for read counts
+- Fixed bug for read counts.
 
 ## [0.0.3] - 09/May/2020
 
