@@ -60,10 +60,13 @@ class ChatMessageProvider with ChangeNotifier {
   List<ChatMessage> getUnreadMessages(String userId) {
     List<ChatMessage> unreadMessages;
 
-    unreadMessages = _messages.where((m) => m.readParticipants.contains(userId) == false).toList();
-    unreadMessages ??= List<ChatMessage>();
-    unreadMessages.sort((a, b) => a.sendAt.compareTo(b.sendAt));
-
+    if (_messages == null) {
+      unreadMessages = List<ChatMessage>();
+    } else {
+      unreadMessages = _messages.where((m) => m.readParticipants.contains(userId) == false).toList();
+      unreadMessages ??= List<ChatMessage>();
+      unreadMessages.sort((a, b) => a.sendAt.compareTo(b.sendAt));
+    }
     return unreadMessages;
   }
 

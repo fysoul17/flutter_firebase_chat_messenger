@@ -178,8 +178,18 @@ class ChatEngine {
     print("<<< Chat data incomming");
 
     ChatMessage recentLocalMessage = provider.messages.lastWhere((m) => m.sendAt != null, orElse: () => null);
+
+    print("------- recentLocalMessage ----------");
+    print(recentLocalMessage.toString());
+    print("-----------------------------------");
+
     for (int index = 0; index < snapshot.documents.length; index++) {
       ChatMessage messageFromServer = ChatMessage.fromFirebase(snapshot.documents[index]);
+
+      print("------- messageFromServer ----------");
+      print(messageFromServer.toString());
+      print("-----------------------------------");
+
       if (messageFromServer.scheduledToRemove) {
         print("------- DATA FROM SERVER (This is schedule to be removed) ----------");
         print(messageFromServer.toString());
@@ -257,9 +267,12 @@ class ChatEngine {
     try {
       WriteBatch batchJob = Firestore.instance.batch();
       unreadChats.forEach((chat) {
-        print(chat.toString());
         chat.readParticipants.add(user.uid);
         chat.unreadParticipants.remove(user.uid);
+
+        // Above codes will change data of existing message. So notify listener must be called manually.
+        provider.updateChatMessage(ChatMessage.fromMap(chat.toMap()));
+
         batchJob.updateData(groupRef.document(groupId).collection('chatMessages').document(chat.uid), {"readParticipants": chat.readParticipants, "unreadParticipants": chat.unreadParticipants});
       });
       batchJob.commit();

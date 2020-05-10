@@ -13,6 +13,7 @@ class ChatMessages extends StatelessWidget {
     Key key,
     @required this.groupId,
     @required this.builder,
+    this.checkReadCount = false,
     this.child,
   })  : assert(groupId != null),
         super(key: key);
@@ -20,6 +21,7 @@ class ChatMessages extends StatelessWidget {
   final Widget child;
   final ChatMessageBuilder builder;
   final String groupId;
+  final bool checkReadCount;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +38,12 @@ class ChatMessages extends StatelessWidget {
         ),
       );
     } else {
-      ChatEngine.instance.markMessagesAsRead(groupId);
-
       return ChangeNotifierProvider.value(
         value: messageProvider,
         child: ChatMessageConsumer(
           child: child ?? Container(),
           builder: builder,
+          checkReadCount: checkReadCount,
         ),
       );
     }
@@ -88,10 +89,12 @@ class ChatMessageConsumer extends StatelessWidget {
     Key key,
     this.child,
     this.builder,
+    this.checkReadCount,
   }) : super(key: key);
 
   final Widget child;
   final ChatMessageBuilder builder;
+  final bool checkReadCount;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +103,10 @@ class ChatMessageConsumer extends StatelessWidget {
     List<ChatMessage> messages = context.select<ChatMessageProvider, List<ChatMessage>>((provider) => provider.messages);
 
     print("[[[[ Selector ]]]] Package >> ChatMessageConsumer");
+    if (checkReadCount && messages != null && messages.length > 0) {
+      ChatEngine.instance.markMessagesAsRead(messages.last.groupId);
+    }
+
     return builder(context, messages, child);
   }
 }

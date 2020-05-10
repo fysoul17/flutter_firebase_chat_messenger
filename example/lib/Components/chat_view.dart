@@ -66,6 +66,7 @@ class _ChatViewState extends State<ChatView> {
 
     return ChatMessages(
       groupId: widget.chatGroupData.id,
+      checkReadCount: true,
       builder: (context, messages, child) {
         if (messages == null) {
           return Container();

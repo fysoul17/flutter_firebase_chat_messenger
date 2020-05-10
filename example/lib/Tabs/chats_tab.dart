@@ -60,7 +60,7 @@ class _ChatsTabState extends State<ChatsTab> with AutomaticKeepAliveClientMixin 
                         Text("${ChatEngine.instance.getNumberOfUnreadMessages(chatGroups[index].id, myUserId)}", style: defaultTextStyle.copyWith(color: Colors.red)),
                       ],
                     ),
-                    subtitle: Text(messages.last.message),
+                    subtitle: Text(messages != null && messages.length > 0 ? messages.last.message : ""),
                     trailing: Icon(Icons.navigate_next),
                     onTap: () => ChatPage.push(context, chatGroups[index]),
                   );
