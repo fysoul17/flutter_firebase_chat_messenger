@@ -34,9 +34,17 @@ class ChatEngine {
     return provider;
   }
 
-  Future<void> initialize() async {
+  /// Whether to use read counts displaying next to the clock (time) text of the messages.
+  /// If sets to [false], users will not send 'message delivered flag' to opponents,
+  /// and thus every user will not be able to get notify of whether the each user has read other's messages or not.
+  /// This will reduce the read counts of messages on Firestore to half (4 -> 2).
+  bool allowReadReceipts;
+
+  Future<void> initialize({bool allowReadReceipts = true}) async {
     print(">>> Initializing Chat Engine ...");
     try {
+      this.allowReadReceipts = allowReadReceipts;
+
       // SQLite Initialize.
       await SQLiteService.instance.initialize();
 
@@ -213,7 +221,7 @@ class ChatEngine {
     provider.notifyChanges();
   }
 
-  Future<void> sendChat(String senderId, ChatGroup chatGroupData, String message, {String messageType = "text"}) async {
+  Future<void> sendChat(String senderId, ChatGroup chatGroupData, String message, {String messageType = "text", Map<String, dynamic> payload}) async {
     print('>>> Sending Chat');
 
     // Start listening for incomming message including the one the user sent.
@@ -242,7 +250,7 @@ class ChatEngine {
       "sendAt": FieldValue.serverTimestamp(),
       "readParticipants": [senderId],
       "unreadParticipants": [chatGroupData.getOpponentData(senderId).uid],
-      "payload": chatGroupData.payload == null ? {} : chatGroupData.payload,
+      "payload": payload == null ? {} : payload,
       "scheduledToRemove": false,
     };
 
@@ -258,6 +266,8 @@ class ChatEngine {
   }
 
   Future<void> markMessagesAsRead(String groupId) async {
+    if (allowReadReceipts == false) return;
+
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     print(">>> Flag chats as read for ${user.uid} in group $groupId");
     ChatMessageProvider provider = getChatMessageProviderOf(groupId);

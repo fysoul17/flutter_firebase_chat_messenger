@@ -1,6 +1,6 @@
 name: firebase_chat_messenger
 description: The package provides chat messenger features like Telegram or KakaoTalk.
-version: 0.0.4
+version: 0.0.5
 author:
 homepage:
 
