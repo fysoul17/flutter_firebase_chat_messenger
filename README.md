@@ -1,5 +1,6 @@
-# firebase_chat_messenger
+# Chat Messenger using Firestore (Alpha)
 
+**This is closed alpha version, please use it at your own risk**
 
 ## Getting Started
 
