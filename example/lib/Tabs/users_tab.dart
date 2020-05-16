@@ -99,7 +99,7 @@ class _UsersTabState extends State<UsersTab> with AutomaticKeepAliveClientMixin 
     User myUserData = UserProvider.of(context, listen: false).userData;
 
     String chatGropId = ChatGroupHelper.generateDefaultGroupId(myUserData.uid, opponentUserData.uid);
-    ChatGroup chatRoodData = ChatGroup(id: chatGropId, participants: [
+    ChatGroup chatGroupData = ChatGroup(id: chatGropId, participants: [
       myUserData.uid,
       opponentUserData.uid
     ], participantsData: [
@@ -109,7 +109,7 @@ class _UsersTabState extends State<UsersTab> with AutomaticKeepAliveClientMixin 
       "sample": "payload",
     });
 
-    ChatPage.push(context, chatRoodData);
+    ChatPage.push(context, chatGroupData);
   }
 
   ChatUser _generateChatUserFor(User user) {

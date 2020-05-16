@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 class ChatGroupProvider with ChangeNotifier {
   List<ChatGroup> _chatGroups;
-  List<ChatGroup> get chatGroups => List.unmodifiable(_chatGroups);
-
+  List<ChatGroup> get chatGroups => _chatGroups == null ? null : List.unmodifiable(_chatGroups);
   set chatGroups(List<ChatGroup> newGroups) {
     _chatGroups = newGroups;
     notifyListeners();
