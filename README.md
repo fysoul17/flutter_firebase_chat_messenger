@@ -36,7 +36,7 @@ There are three main Module/Widgets we provide.
 
 ### Chat Engine
 
-Call ```ChatEngine.instance.initialize();``` anytime before you want to fetch chat groups and messages.
+Call ```ChatEngine.instance.initialize();``` after the firebase is authenticated. 
 This initializes local database and start listening for chat groups' updates.
 
 Set 'allowReadReceipts' to **false** if you want to avoid users to send 'message delivered flag' to opponents.
