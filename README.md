@@ -25,3 +25,71 @@ To use this plugin:
 1. Using the [Firebase Console](http://console.firebase.google.com/), add an iOS app to your project.
 2. Follow the assistant, download the generated `GoogleService-Info.plist` file. Do **NOT** follow the steps named _"Add Firebase SDK"_ and _"Add initialization code"_ in the Firebase assistant.
 3. Open `ios/Runner.xcworkspace` with Xcode, and **within Xcode** place the `GoogleService-Info.plist` file inside `ios/Runner`.
+
+## Usage
+
+There are three main Module/Widgets we provide.
+1. ChatEngine - The core module of the package. It provides features like sending chat, clearning cache, removing db and more. 
+                This must be initialized at the beginning of the app start.
+2. ChatGroupList - This widget provides chat groups that is created for the user.
+3. ChatMessages - This widget provides chat messages for each chat groups.
+
+### Chat Engine
+
+Call ```ChatEngine.instance.initialize();``` anytime before you want to fetch chat groups and messages.
+This initializes local database and start listening for chat groups' updates.
+
+Set 'allowReadReceipts' to **false** if you want to avoid users to send 'message delivered flag' to opponents.
+Then, every user will not be able to get notify of whether the each user has read other's messages or not.
+This will reduce the read counts of messages on Firestore to half (4 -> 2). 
+
+Defaults to true, and recommended to use as default for the most of case. Consider using it for reducing read counts only.
+  
+### Chat Group List
+
+Provides chat group list data.
+
+Sample code
+```dart 
+ChatGroupList(
+  builder: (context, chatGroups, child) {
+    if (chatGroups == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: chatGroups.length,
+        itemBuilder: (context, index) {
+          ChatUser opponentUser = chatGroups[index].getOpponentData(myUserId);
+          bool photoExist = opponentUser.avatarUrl != null && opponentUser.avatarUrl.length > 0;
+          
+          // Some other codes
+          // return ChatMessages(...);
+        },
+      );
+    }
+  },
+);
+```
+
+### Chat Messages
+
+Provides chat messages of selected chat group.
+
+Sample code
+```dart
+ChatMessages(
+  groupId: chatGroupId,
+  builder: (context, messages, child) {
+    if (messages == null || messages.length < 1) {
+      return Container();
+    } else {
+      List<ChatMessage> chats = messages.reversed.toList();
+      
+      // Some other codes
+      // return ListView(...);
+    }
+  },
+);
+```
