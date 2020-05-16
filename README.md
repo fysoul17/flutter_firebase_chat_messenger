@@ -1,4 +1,4 @@
-# Chat Messenger using Firestore (Alpha)
+# Chat Messenger using Firestore for Flutter (Alpha)
 
 **This is closed alpha version, please use it at your own risk**
 
