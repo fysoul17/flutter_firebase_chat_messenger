@@ -19,7 +19,7 @@ class ChatEngine {
 
   final groupRef = Firestore.instance.collection('chatGroups');
 
-  ChatGroupProvider _chatGroupProvider = ChatGroupProvider()..chatGroups = List<ChatGroup>();
+  ChatGroupProvider _chatGroupProvider = ChatGroupProvider();
   ChatGroupProvider get chatGroupProvider => _chatGroupProvider;
 
   List<ChatMessageProvider> _chatMessageProviders = List<ChatMessageProvider>();

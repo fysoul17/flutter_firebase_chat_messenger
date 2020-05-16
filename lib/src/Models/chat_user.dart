@@ -24,6 +24,6 @@ class ChatUser {
         'uid': uid,
         'avatarUrl': avatarUrl,
         'nickname': nickname,
-        'payload': payload,
+        'payload': payload == null ? {} : payload,
       };
 }
