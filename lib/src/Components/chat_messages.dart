@@ -13,7 +13,7 @@ class ChatMessages extends StatelessWidget {
     Key key,
     @required this.groupId,
     @required this.builder,
-    this.checkReadCount = false,
+    this.checkReadCount = true,
     this.child,
   })  : assert(groupId != null),
         super(key: key);
