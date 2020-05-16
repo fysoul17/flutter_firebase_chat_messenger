@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
         RaisedButton(
           child: Text("Sign Out"),
           onPressed: () {
-            ChatEngine.instance.clearCache();
+            ChatEngine.instance.close();
             FirebaseAuth.instance.signOut();
           },
         ),

@@ -2,6 +2,7 @@
 
 - Payload for ChatMessage is now working as expected.
 - Added [allowReadReceipts] feature. Set to false if you need to reduce message read counts on Firestore.
+- Added close() function for switching between accounts.
 
 ## [0.0.4] - 11/May/2020
 

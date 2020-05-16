@@ -40,6 +40,8 @@ class ChatEngine {
   /// This will reduce the read counts of messages on Firestore to half (4 -> 2).
   bool allowReadReceipts;
 
+  StreamSubscription<QuerySnapshot> _chatGroupListener;
+
   Future<void> initialize({bool allowReadReceipts = true}) async {
     print(">>> Initializing Chat Engine ...");
     try {
@@ -50,11 +52,21 @@ class ChatEngine {
 
       // Fetch chat groups and listen (sanpshot).
       FirebaseUser user = await FirebaseAuth.instance.currentUser();
-      FirebaseService.api.getChatGroupStream(user.uid).listen((snap) => _processIncommingChatGroupDataFromServer(snap));
+      _chatGroupListener = FirebaseService.api.getChatGroupStream(user.uid).listen((snap) => _processIncommingChatGroupDataFromServer(snap));
     } catch (e) {
       print(e.toString());
     }
     print(">>> Chat Engine Initialized !");
+  }
+
+  void close() {
+    print(">>> Chat Engine Closing! !");
+    _chatGroupListener?.cancel();
+    _chatMessageProviders.forEach((provider) {
+      provider.chatListener.cancel();
+    });
+    _chatMessageProviders.clear();
+    _chatGroupProvider.chatGroups.clear();
   }
 
   Future<void> _processIncommingChatGroupDataFromServer(QuerySnapshot snapshot) async {
