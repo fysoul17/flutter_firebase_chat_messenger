@@ -62,11 +62,11 @@ class ChatEngine {
   void close() {
     print(">>> Chat Engine Closing! !");
     _chatGroupListener?.cancel();
-    _chatMessageProviders.forEach((provider) {
-      provider.chatListener.cancel();
+    _chatMessageProviders?.forEach((provider) {
+      provider.chatListener?.cancel();
     });
-    _chatMessageProviders.clear();
-    _chatGroupProvider.chatGroups.clear();
+    _chatMessageProviders?.clear();
+    _chatGroupProvider?.chatGroups?.clear();
   }
 
   Future<void> _processIncommingChatGroupDataFromServer(QuerySnapshot snapshot) async {
